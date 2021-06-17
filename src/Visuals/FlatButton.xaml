@@ -1,0 +1,64 @@
+﻿<Button
+    x:Class="NetDependencyWalker.Visuals.FlatButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="FlatBtn"
+    MaxWidth="450"
+    HorizontalContentAlignment="Stretch"
+    d:DesignHeight="88"
+    d:DesignWidth="188"
+    mc:Ignorable="d">
+    <Button.Template>
+        <ControlTemplate TargetType="{x:Type ButtonBase}">
+            <Border
+                BorderBrush="LightGray"
+                BorderThickness="1"
+                SnapsToDevicePixels="True">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="White" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=FlatBtn, Path=IsMouseOver}" Value="True">
+                                <Setter Property="Background" Value="#ECECEC" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=FlatBtn, Path=IsPressed}" Value="True">
+                                <Setter Property="Background" Value="#E0E0E0" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <ContentPresenter />
+            </Border>
+        </ControlTemplate>
+    </Button.Template>
+    <Button.Content>
+        <Border
+            Name="HighlightBorder"
+            BorderBrush="Transparent"
+            BorderThickness="2"
+            SnapsToDevicePixels="True">
+            <Path
+                Name="PathElement"
+                HorizontalAlignment="Center"
+                Data="F1M-224.553,1265L-246.174,1283.52 -267.792,1302.04 -267.792,1265 -267.792,1227.97 -246.174,1246.49 -224.553,1265z"
+                Stretch="Uniform">
+                <Path.Style>
+                    <Style TargetType="Path">
+                        <Setter Property="Fill" Value="Black" />
+                        <Setter Property="Margin" Value="2" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=FlatBtn, Path=IsMouseOver}" Value="True">
+                                <Setter Property="Fill" Value="DodgerBlue" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=FlatBtn, Path=IsPressed}" Value="True">
+                                <Setter Property="Margin" Value="3,3,1,1" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Path.Style>
+            </Path>
+        </Border>
+    </Button.Content>
+</Button>
