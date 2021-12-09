@@ -31,8 +31,10 @@ jobs:
       run: dotnet build ./src/ --no-restore -c Release --verbosity minimal /p:AssemblyVersion=${{env.AutoVersion_AssemblySemVer}} /p:Version=${{env.AutoVersion_SemVer}}
     - name: Publish
       run: dotnet publish ./src/ --no-build -c Release --verbosity minimal /p:AssemblyVersion=${{env.AutoVersion_AssemblySemVer}} /p:Version=${{env.AutoVersion_SemVer}}
-    - name: Zip Output
-      run: zip -r NetDependencyWalker.zip ./src/bin/Release/netcoreapp3.1/publish/
+    - uses: papeloto/action-zip@v1
+      with:
+        files: ./src/bin/Release/netcoreapp3.1/publish/
+        dest: NetDependencyWalker.zip   
     - name: Create Github Release
       if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
       id: create_release
