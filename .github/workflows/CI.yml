@@ -14,7 +14,6 @@ jobs:
     runs-on: windows-latest
     env: 
         Configuration: Release
-        SolutionPath: src\NetDependencyWalker.sln
     steps:
     - uses: actions/checkout@v2   
       with:
@@ -27,9 +26,9 @@ jobs:
         ./.github/workflows/AutoVersion.ps1
       shell: pwsh 
     - name: Restore NuGet Packages
-      run: dotnet restore $env:SolutionPath -Verbosity quiet
+      run: dotnet restore ./src/ --verbosity minimal
     - name: Build
-      run: dotnet build ./src/ --no-restore -c Release /p:AssemblyVersion=${{env.AutoVersion_AssemblySemVer}} /p:Version=${{env.AutoVersion_SemVer}}
+      run: dotnet build ./src/ --no-restore -c Release --verbosity minimal /p:AssemblyVersion=${{env.AutoVersion_AssemblySemVer}} /p:Version=${{env.AutoVersion_SemVer}}
     - name: Publish
       run: dotnet publish ./src/ --no-build -c Release --verbosity minimal /p:AssemblyVersion=${{env.AutoVersion_AssemblySemVer}} /p:Version=${{env.AutoVersion_SemVer}}
     - name: Zip Output
