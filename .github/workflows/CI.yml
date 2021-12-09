@@ -1,0 +1,57 @@
+name: Extension build
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: windows-latest
+    env: 
+        Configuration: Release
+        SolutionPath: src\NetDependencyWalker.sln
+    steps:
+    - uses: actions/checkout@v2   
+      with:
+        fetch-depth: '0'
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+    - run: |
+        ./.github/workflows/AutoVersion.ps1
+      shell: pwsh 
+    - name: Restore NuGet Packages
+      run: dotnet restore $env:SolutionPath -Verbosity quiet
+    - name: Build
+      run: dotnet build ./src/ --no-restore -c Release /p:AssemblyVersion=${{env.AutoVersion_AssemblySemVer}} /p:Version=${{env.AutoVersion_SemVer}}
+    - name: Publish
+      run: dotnet publish ./src/ --no-build -c Release --verbosity minimal /p:AssemblyVersion=${{env.AutoVersion_AssemblySemVer}} /p:Version=${{env.AutoVersion_SemVer}}
+    - name: Zip Output
+      run: zip -r NetDependencyWalker.zip ./src/bin/Release/netcoreapp3.1/publish/
+    - name: Create Github Release
+      if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{env.AutoVersion_SemVer}}
+        release_name: ${{env.AutoVersion_SemVer}}
+        body: 'NetDependencyWalker v${{env.AutoVersion_SemVer}}'
+        draft: false
+        prerelease: false
+    - name: Upload release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: 'NetDependencyWalker.zip'
+        asset_name: 'NetDependencyWalker.zip
+        asset_content_type: binary/octet-stream
