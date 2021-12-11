@@ -256,6 +256,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBlock
                                 Grid.Row="0"
@@ -265,6 +266,13 @@
                                 Text="Welcome to the .NET Dependency Walker" />
                             <TextBlock
                                 Grid.Row="1"
+                                FontFamily="Segoe UI"
+                                FontSize="10">
+                                <Run Text="Version:" />
+                                <Run Text="{Binding VersionText, Mode=OneTime}" />
+                            </TextBlock>
+                            <TextBlock
+                                Grid.Row="2"
                                 Margin="0,4,0,0"
                                 FontFamily="Segoe UI"
                                 FontSize="12"

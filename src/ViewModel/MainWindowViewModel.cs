@@ -724,5 +724,14 @@
 
             return node.MajorVersionMismatched || !_listOnlyMajorVersionMismatches;
         }
+
+        public string VersionText
+        {
+            get
+            {
+                var version = typeof(MainWindowViewModel).Assembly.GetName().Version;
+                return version.Major + "." + version.Minor + "." + version.Build;
+            }
+        }
     }
 }

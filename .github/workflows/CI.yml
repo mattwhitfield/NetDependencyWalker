@@ -1,4 +1,4 @@
-name: Extension build
+name: NetDependencyWalker build
 
 on:
   pull_request:
